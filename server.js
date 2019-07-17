@@ -1,33 +1,30 @@
 const express = require('express')
-// const webpackDevMiddleware = require('webpack-dev-middleware')
-// const webpack = require('webpack')
-// const config = require('./webpack.config.js')
-// const plugin = new webpackDevMiddleware(compile)
-// app.use(plugin)
-
-
-//const compile = webpack(config())
-
-const React = require('react')
+const path = require('path')
+const component = require('./src/server-index').default
 
 const ReactDomServer = require('react-dom/server')
-//const component = React.createElement('div',{className:'test'},'server render react com')
-//const component = <div>jsx 语法糖</div>
-const component = require('./src/index').default
 
 const app = express()
 
+app.use('/dist',express.static(path.join(__dirname, 'dist')))
+
 app.get('*',(req,res) => {
 
-    const result =  ReactDomServer.renderToString(component())
+    const result =  ReactDomServer.renderToString(component({path:'b'}))
 
-    res.send(`
+    res.writeHead(200,{'Content-Type':'text/html;charset=utf-8'})
+    res.end(`  
         <!DOCTYPE html>
-            <html><body>
-                ${result}
-            </body></html>`)
-    res.end()
+            <html>
+                <head>
+                    <link rel='stylesheet' href="/dist/main.css"/>
+                </head>
+                <body>
+                    <div id="app">${result}</div>
+                    <script src='/dist/bundle.js'></script>
+                </body>
+            </html>`)
 })
 app.listen(3000, () => {
-    console.log('!!!!!!!server start')
+    console.log('listen 3000')
 })

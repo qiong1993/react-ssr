@@ -41,7 +41,8 @@ module.exports = env => {
                 Components: path.resolve(__dirname,'src/component'),
                 Utils: path.resolve(__dirname,'src/utils'),
             }
-        }
+        },
+        watch:true
     }
 
 }

@@ -8,7 +8,7 @@
     "build": "webpack --env.production",
     "ssr-build": "webpack --config build/webpack.ssr.js",
     "server-start": "nodemon ./server.js",
-    "server-sid-render": "nodemon --exec babel-node --server.js"
+    "server-render": "nodemon --exec babel-node server.js"
   },
   "author": "",
   "license": "ISC",

@@ -4,7 +4,13 @@ import React from 'react'
 const RouterContext = React.createContext('')
 
 class Routers extends React.Component {
-    state = {}
+    constructor(props){
+        super(props)
+        this.state = {
+            currentPath: props.defaultPath
+        }
+    }
+    
     
     onChangeHistory = () => {
         const currentPath = getHistoryPath(window.location.href)

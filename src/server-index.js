@@ -1,6 +1,5 @@
-import styles from './index.scss'
+//import styles from './index.scss'
 import React from 'react'
-import ReactDOM from 'react-dom'
 
 import TimeCount from './component/timecount'
 import {Routers,Router,Link} from './component/HistoryRouters'
@@ -8,6 +7,10 @@ import {Routers,Router,Link} from './component/HistoryRouters'
 import {createStore,combineReducers} from 'redux'
 
 import { Provider, connect} from 'react-redux'
+
+console.log('@@@@@@@@@@@@@@@')
+
+const styles = {}
 
 const simpleReducer = (status =10, action)=>{
     switch (action.type){
@@ -20,15 +23,14 @@ const simpleReducer = (status =10, action)=>{
     }
 }
 
-const store = createStore(combineReducers({simpleReducer}))
-
 class App extends React.Component{
 
     constructor(props){
         super(props)
         this.state={
-            passValue:store.getState().simpleReducer,
-            componentShow:true
+            //passValue:store.getState().simpleReducer,
+            passValue:props.simpleReducer,
+            componentShow:false
         }
     }
 
@@ -61,31 +63,11 @@ class App extends React.Component{
         const {passValue,componentShow} = this.state
         const timeCountProps = {
             passValue,
-            dispatch:store.dispatch
+            dispatch:this.props.dispatch
         }
 
-        const {simpleReducer} = this.props
-
-        console.log("!!!!!!!",this.props)
-
-        const list = [1,2,3,4,5,6,7,8]
-
-        // return(
-        //         <div className="flexDiv">
-
-        //             {list.map((item,index) => {
-        //                 return (
-        //                     <div className="flexItemDiv" key={index}>
-
-        //                         <p>hahahahha 我是新加的{item}</p>
-        //                         <img src='http://www.runoob.com/wp-content/uploads/2015/07/c55dfe8e3422458b50e985552ef13ba5.png'></img>
-        //                     </div>
-        //                 )
-        //                 }
-        //             )}
-                    
-        //         </div>
-        // )
+        const {simpleReducer, pathReducer} = this.props
+        console.log("path:",pathReducer)
         
         return (
             <div>
@@ -105,7 +87,7 @@ class App extends React.Component{
 
                     {componentShow ? <TimeCount {...timeCountProps}/> : ''}
 
-                    <Routers>
+                    <Routers defaultPath={pathReducer}>
                         <dl>
                             <dt><Link to='a'>a</Link></dt>
                             <dt><Link to='b'>b</Link></dt>
@@ -126,22 +108,22 @@ class App extends React.Component{
 
 }
 
-const WrappedApp = connect(({simpleReducer}) => ({simpleReducer}))(App)
+const WrappedApp = connect(({simpleReducer,pathReducer}) => ({simpleReducer,pathReducer}))(App)
 
-class Rooter  extends React.Component{
-    render() {
-      return (
+
+export default  ({path}={}) => {
+    console.log('!!!!!path',path)
+
+    const pathReducer = (status=path)=>status
+
+
+    const store = createStore(combineReducers({simpleReducer,pathReducer}))
+
+    console.log('!!!!!store',store.getState())
+
+    return (
         <Provider store={store}>
             <WrappedApp/>
         </Provider>
-      );
-    }
+      )
 }
-
-
-
-ReactDOM.render(
-    <Rooter/>,
-    document.getElementById('app')
-)
-
